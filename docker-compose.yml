@@ -1,0 +1,33 @@
+version: '3'
+services:
+    web:
+        image: bugtracker/web
+        build: ./web
+        volumes:
+            - "./web/application:/app"
+        ports: 
+            - "8000:8000"
+        command: "/bin/sh /app/entrypoint-dev"
+        env_file:
+            - "./web/web.env"
+            - "./db/db.env"
+        depends_on:
+            - db
+    db:
+        image: "postgres:alpine"
+        volumes:
+            - "./db/postgres_data:/var/lib/postgresql/data/"
+        env_file:
+            - "./db/db.env"
+        ports:
+            - 5431:5432
+    vue:
+        image: bugtracker/vue
+        build: ./vue/
+        ports:
+            - "8080:8080"
+        volumes:
+            - "./vue/application:/app"
+            - "/app/node_modules"
+        depends_on:
+            - web 
