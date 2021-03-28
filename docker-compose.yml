@@ -1,7 +1,7 @@
 version: '3'
 services:
     web:
-        image: bugtracker/web
+        image: educomtoppers/bugtracker-web
         build: ./web
         volumes:
             - "./web/application:/app"
@@ -22,7 +22,7 @@ services:
         ports:
             - 5431:5432
     vue:
-        image: bugtracker/vue
+        image: educomtoppers/bugtracker-vue
         build: ./vue/
         ports:
             - "8080:8080"
