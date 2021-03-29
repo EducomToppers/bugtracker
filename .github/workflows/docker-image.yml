@@ -13,11 +13,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout the repository
+      uses: actions/checkout@v2
+
     - name: Build the Docker image
       run: |
-      docker login -u $(( secrets.DOCKER_USERNAME }} -p $ {{ secrets.DOCKER_PASSWORD }}
-      docker build -t educomtoppers/bugtracker-web ./web
-      docker build -t educomtoppers/bugtracker-vue ./vue
-      docker push educomtoppers/bugtracker-web ./web
-      docker push educomtoppers/bugtracker-vue
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -t educomtoppers/bugtracker-web ./web
+        docker build -t educomtoppers/bugtracker-vue ./vue
+        docker push educomtoppers/bugtracker-web 
+        docker push educomtoppers/bugtracker-vue
