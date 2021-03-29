@@ -4,6 +4,6 @@ WORKDIR /app
 COPY ./requirements.txt .
 COPY ./application .
 RUN apk update \
-    && apk add postgresql-dev gcc python3-dev musl-dev
+    && apk add postgresql-client postgresql-dev gcc python3-dev musl-dev
 RUN pip3 install -r requirements.txt
 

@@ -1,4 +1,22 @@
 #!/bin/sh
 
+printf "Initializing postgresql service...\n"
+until pg_isready -h "db"
+do
+    printf "Postgres is not ready to accept connections, waiting.....\n"
+    sleep 1
+done
 python manage.py migrate
+
+printf "Creating superuser if not already exists...\n"
+python manage.py shell << EOL
+from django.contrib.auth.models import User
+try:
+    User.objects.create_superuser(username='root', password='rootroot',
+                                  email='root@bugtracker.com')
+    print('superuser not found, was created')
+except Exception:
+    print('superuser already exists, creating skipped')
+EOL
+
 python manage.py runserver 0.0.0.0:8000
