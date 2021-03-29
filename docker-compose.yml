@@ -20,7 +20,7 @@ services:
         env_file:
             - "./db/db.env"
         ports:
-            - 5431:5432
+            - "5431:5431"
     vue:
         image: educomtoppers/bugtracker-vue
         build: ./vue/
