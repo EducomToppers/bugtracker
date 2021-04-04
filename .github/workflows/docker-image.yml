@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Build pipeline
 
 on:
   push:
@@ -18,8 +18,15 @@ jobs:
 
     - name: Build the Docker image
       run: |
-        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker build -t educomtoppers/bugtracker-web ./web
         docker build -t educomtoppers/bugtracker-vue ./vue
+
+    - name: Lint Code
+      run: docker-compose run web pycodestyle
+
+    - name: Publish image
+      if: github.event.pull_request.merged == 'true'
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
         docker push educomtoppers/bugtracker-web 
         docker push educomtoppers/bugtracker-vue

@@ -10,13 +10,16 @@ python manage.py migrate
 
 printf "Creating superuser if not already exists...\n"
 python manage.py shell << EOL
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
+User = get_user_model()
 try:
+    User.objects.get(username='root')
+    print('Superuser already exists, not created')
+except User.DoesNotExist:
+    print('Superuser not found, creating...')
     User.objects.create_superuser(username='root', password='rootroot',
                                   email='root@bugtracker.com')
-    print('superuser not found, was created')
-except Exception:
-    print('superuser already exists, creating skipped')
+    print('Superuser created')
 EOL
 
 python manage.py runserver 0.0.0.0:8000
