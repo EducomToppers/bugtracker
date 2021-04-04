@@ -14,7 +14,7 @@ services:
         depends_on:
             - db
     db:
-        image: "postgres:alpine"
+        image: "postgres:13.2-alpine"
         volumes:
             - "./db/postgres_data:/var/lib/postgresql/data/"
         env_file:
