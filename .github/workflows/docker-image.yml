@@ -21,26 +21,8 @@ jobs:
         docker build -t educomtoppers/bugtracker-web ./web
         docker build -t educomtoppers/bugtracker-vue ./vue
 
-  lint:
-
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v2
-
     - name: Lint Code
       run: docker-compose run web pycodestyle
-
-  publish:
-
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v2
 
     - name: Publish image
       run: |
