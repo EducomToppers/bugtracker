@@ -24,6 +24,7 @@ jobs:
   lint:
 
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
     - name: Checkout the repository
@@ -35,6 +36,7 @@ jobs:
   publish:
 
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
     - name: Checkout the repository
