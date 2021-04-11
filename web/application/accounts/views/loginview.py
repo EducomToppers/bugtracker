@@ -14,13 +14,13 @@ User = get_user_model()
 
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
-        payload = json.loads(request.body)
+        payload = request.data
         username = payload['username']
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            raise ValidationError({'Not found': f'User with {username} does not exist'})
+            raise ValidationError({'error': f'User with username {username} was not found'})
         user = authenticate(request, **payload)
         if user:
             return Response(UserSerializer(user).data)
-        raise ValidationError({'Incorrect password': 'Could not log in user'})
+        raise ValidationError({'error': 'Invalid Password'})

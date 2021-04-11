@@ -21,5 +21,7 @@ except User.DoesNotExist:
                                   email='root@bugtracker.com')
     print('Superuser created')
 EOL
+printf "Copying static files..."
+python manage.py collectstatic --no-input
 
 python manage.py runserver 0.0.0.0:8000

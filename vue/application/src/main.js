@@ -11,7 +11,8 @@ Vue.use(VueRouter);
 
 Vue.config.productionTip = false;
 
-const csrftoken = document.cookie.split('=')[1];
+//extract csrf token from the brower's saved cookies
+const csrftoken = /csrftoken=(\w*);/.exec(document.cookie)[1];
 
 Axios.defaults.baseURL = 'http://localhost:8000';
 Axios.defaults.withCredentials = true;

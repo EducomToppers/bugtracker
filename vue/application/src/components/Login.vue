@@ -1,15 +1,17 @@
 <template>
   <div class="container">
     <form @submit="submit_login" method="post">
+      <ul v-if="errors.length > 0" class="errors">
+        <span class="error-description">Please resolve the following errors:</span>
+        <li v-for="error, idx in errors" :key="idx" class="error">{{ error }}</li>
+      </ul>
       <div class="form-group">
         <label for="username">Username</label>
-        <input type="text" id="username" class="form-control" :class="username_is_invalid" name="username" v-model="username">
-        <span v-if="!hide_username_error" class="help-block">Username was not found</span>
+        <input type="text" id="username" class="form-control" name="username" v-model="username">
       </div>
       <div class="form-group">
         <label for="password">Password</label>
-        <input class="form-control" :class="password_is_invalid" type="password" id="password" name="password" v-model="password">
-        <span v-if="!hide_password_error" class="help-block">Incorrect Password</span>
+        <input class="form-control" type="password" id="password" name="password" v-model="password">
       </div>
       <button type="submit" class="btn btn-primary">Log in</button>
     </form>
@@ -23,33 +25,26 @@
       return {
         username:'',
         password: '',
-        hide_username_error: true,
-        username_is_invalid: '',
-        hide_password_error: true,
-        password_is_invalid: ''
+        errors: []
       };
     },
     methods: {
       async submit_login(e) {
         e.preventDefault();
+        this.errors.length = 0;
+
         const axios = require('axios');
         const payload = {
           username: this.username,
-          password: this.password
+          password: this.password,
         }
           const response = await axios.post("accounts/login/", payload)
             .catch(error => {
               if (error.response.status === 400) {
-                if (Object.keys(error.response.data).find(e => e === 'Not found')) {
-                  this.username_is_invalid = 'is-invalid';
-                  this.hide_username_error = false;
-                  this.hide_password_error = true;
-                } else if (Object.keys(error.response.data).find(e === 'Incorrect password')) {
-                  this.hide_username_error = true;
-                  this.hide_password_error = false;
-                  this.is_password_error = 'is-invalid';
+                this.errors = [...this.errors, error.response.data.error];
+              } else if (error.response.status === 500) {
+                this.errors = [...this.errors, "Server error"];
               }
-            }
           });
           if (response && response.status === 200) {
             localStorage.setItem('user', JSON.stringify(response.data));
@@ -69,5 +64,11 @@
   }
   .btn-signup {
     margin-top: 20px;
+  }
+  .errors {
+    color: #d81d1d;
+  }
+  .error-description {
+    font-size: 1.2rem;
   }
 </style>
