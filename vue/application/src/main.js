@@ -14,14 +14,13 @@ Vue.config.productionTip = false;
 Axios.defaults.baseURL = 'http://localhost:8000';
 Axios.defaults.withCredentials = true;
 //extract csrf token from the brower's saved cookies
-const csrf_cookie = /csrftoken=(\w*);/.exec(document.cookie);
-let csrftoken = null;
-if (csrf_cookie) {
-  csrftoken = csrf_cookie[1];
-} else {
-  //touch the django server to retrieve a fresh token
-  Axios.get('/accounts/csrf-token/')
-}
+  const csrf_cookie = /csrftoken=(\w*);/.exec(document.cookie);
+  let csrftoken = null;
+  if (csrf_cookie) {
+    csrftoken = csrf_cookie[1];
+  } else {
+    csrftoken = Axios.get('/accounts/csrf-token/')
+  }
 Axios.defaults.headers.common['X-CSRFToken'] = csrftoken
 
 const router = new VueRouter({

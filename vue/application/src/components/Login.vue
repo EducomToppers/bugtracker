@@ -32,13 +32,20 @@
       async submit_login(e) {
         e.preventDefault();
         this.errors.length = 0;
-
         const axios = require('axios');
+        
+        // get a csrf token from the server first to block cross origin attacks
+        const {data: csrftoken} = await axios.get('/accounts/csrf-token/');
+        const config = {
+          headers: {
+            'X-CSRFToken': csrftoken
+          }
+        };
         const payload = {
           username: this.username,
           password: this.password,
         }
-          const response = await axios.post("accounts/login/", payload)
+          const response = await axios.post("accounts/login/", payload, config)
             .catch(error => {
               if (error.response.status === 400) {
                 this.errors = [...this.errors, error.response.data.error];
