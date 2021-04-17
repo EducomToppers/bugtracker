@@ -33,7 +33,7 @@
         e.preventDefault();
         this.errors.length = 0;
         const axios = require('axios');
-        
+
         // get a csrf token from the server first to block cross origin attacks
         const {data: csrftoken} = await axios.get('/accounts/csrf-token/');
         const config = {
